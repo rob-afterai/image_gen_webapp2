@@ -186,7 +186,7 @@ def dataset_generate_images(request, pk):
     paths['blender_base'] = web_dir + "/users/common/fut__kit900_283.blend"
     print(os.listdir(dataset_dir + "/../../.."))
     print(paths)
-    success = simulation.generate_images(paths)
+    # success = simulation.generate_images(paths)
 
     # save thumbnails
     images = paths['images'] + "/"  # paths['images'].replace('\\\\', '\\') + "\\"
