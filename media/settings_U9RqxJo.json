@@ -1,0 +1,6 @@
+{
+	"Simulator": "Blender",
+	"no_images": 1000,
+	"image_size": [200,200,3]
+	"image_type": "png"
+}
