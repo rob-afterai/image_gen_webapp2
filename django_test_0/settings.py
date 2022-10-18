@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-it5+&k_ywvppyub8k&d1)csbaiidlpg_hqso#9kbt#(bb57^eq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "django-f1.azurewebsites.net", "after-ai.com"]
+ALLOWED_HOSTS = ["localhost", "imgen.azurewebsites.net", "after-ai.com"]
 
 
 # Application definition
@@ -91,6 +91,7 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': 'db',
+        'PORT': '8080',
     }
 }
 
