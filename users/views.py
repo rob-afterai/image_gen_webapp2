@@ -81,7 +81,7 @@ def dataset(request, pk):
             names.append(file)
             count += 1
     dataset.number_of_images = count/2
-    dataset.save()
+    dataset.save() #
     context['dataset'] = dataset
     context['image_paths'] = image_paths
     context['image_names'] = names
