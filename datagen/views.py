@@ -22,7 +22,7 @@ def datagen(request):
     # dir_forward_slash = '/'.join(items)
     dir_files = os.listdir(abs_dir)
     for file in dir_files:
-        image_paths.append(f"{rel_dir}/{file}")
+        image_paths.append([f"{rel_dir}/{file}", file])
 
     context = {
         'image_paths': image_paths,

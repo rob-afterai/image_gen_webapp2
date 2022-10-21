@@ -190,10 +190,10 @@
                 </div>
             </div>
             <div id="image-card-holder">
-                {% for image_path in image_paths %}
+                {% for image_path, image_label_path in image_paths %}
                     <div class="image-card";>
                         <img src={{ image_path }} class="image-card-image">
-                        <p class="image-card-text">{{ image_path }}</p>
+                        <p class="image-card-text">{{ image_label_path }}</p>
                     </div>
                 {% endfor %}
             </div>

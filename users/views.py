@@ -77,10 +77,10 @@ def dataset(request, pk):
     names = []
     for file in dir_files:
         if file[-5:] == ".JPEG":
-            image_paths.append(f"{rel_dir}/{file}")
+            image_paths.append([f"{rel_dir}/{file}", file])
             names.append(file)
             count += 1
-    dataset.number_of_images = count
+    dataset.number_of_images = count/2
     dataset.save()
     context['dataset'] = dataset
     context['image_paths'] = image_paths
