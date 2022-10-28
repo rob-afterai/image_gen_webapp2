@@ -6,6 +6,8 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', datagen_views.home, name='home'),
     path('datagen/', datagen_views.datagen, name='datagen'),
+    path('library/', datagen_views.library, name='library'),
+    path('datagen/download/', datagen_views.download_dataset, name='download'),
     # path('register/', user_views.register, name='register'),
     # path('', include('datagen.urls')),
 ]

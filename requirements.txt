@@ -2,3 +2,4 @@ Django==4.1
 PILLOW==9.2.0
 django-crispy-forms==1.14.0
 psycopg2>=2.8
+gdown==4.5.3

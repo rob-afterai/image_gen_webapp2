@@ -1,0 +1,96 @@
+{% extends "datagen/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<head>
+    <style>
+        /* card area */
+        #obj-card-holder{
+            position: relative;
+            border: 3px solid black;
+            width: 100%;
+            block-size: fit-content;
+            margin: 5px;
+            padding: 5px;
+            background-color: lightgray;
+        }
+        
+        .obj-card{
+            border: 3px solid black;
+            width: 120px;
+            height: 180px;
+            display: inline-block;
+            overflow: hidden;
+            padding: 4px;
+            background-color: white;
+        }
+
+        .obj-card-image{
+            margin: 2px;
+        }
+
+        .obj-card-text{
+            word-wrap: break-word;
+            width: 90%;
+            height: 90%;
+            text-align: center;
+            font-size: 14px;
+            margin: 5%;
+        }
+
+        .top-bar-left{
+            float: left;
+            width: 50%;
+            /* border: 3px solid greenyellow; */
+            height: 36px;
+        }
+
+        .top-bar-right{
+            float: right;
+            width: 50%;
+            /* border: 3px solid blue; */
+            height: 36px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Library</h1>
+    <a>We are building a library of open source .objs for free use</a>
+
+    <!-- User Input -->
+    <p style="margin-top: 50px;"></p>
+    <div style="width:100%">
+        <p>Your Objects</p>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{new_form.as_p}}
+            <div class="top-bar-left">
+                <input type="file" name="document">
+            </div>
+            <div class="top-bar-right">
+                <p><input type="submit" value="Upload" style="float:right"/></p>
+            </div>
+        </form>
+    </div>
+
+    <!-- User Objects -->
+    <p style="margin-top: 70px;"></p>
+    <div id="obj-card-holder"></div>
+
+    <!-- library -->
+    <p style="margin-top: 50px;"></p>
+    <div>
+        <p style="margin-top: 12px;">Library objects: {{ no_images }} images</p>
+    </div>
+    <div id="obj-card-holder">
+        {% for image_path, image_label_path in image_paths %}
+            <div class="obj-card";>
+                <img src={{ image_path }} class="obj-card-image">
+                <p class="obj-card-text">{{ image_label_path }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+{% endblock content %}

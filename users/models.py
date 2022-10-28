@@ -25,6 +25,7 @@ class Dataset(models.Model):
     path_to_images = models.CharField(max_length=200, default="default")
     settings_file = models.CharField(max_length=200, default="default")
     number_of_images = models.IntegerField(default=0)
+    # object_names = models.
 
 
 # content = models.TextField()
