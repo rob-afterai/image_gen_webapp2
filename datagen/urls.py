@@ -8,6 +8,7 @@ urlpatterns = [
     path('datagen/', datagen_views.datagen, name='datagen'),
     path('library/', datagen_views.library, name='library'),
     path('datagen/download/', datagen_views.download_dataset, name='download'),
+    # path('library/upload_obj/', datagen_views.upload_obj, name='upload_obj'),
     # path('register/', user_views.register, name='register'),
     # path('', include('datagen.urls')),
 ]

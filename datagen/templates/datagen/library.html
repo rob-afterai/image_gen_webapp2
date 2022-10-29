@@ -5,7 +5,7 @@
 <head>
     <style>
         /* card area */
-        #obj-card-holder{
+        .obj-card-holder{
             position: relative;
             border: 3px solid black;
             width: 100%;
@@ -27,6 +27,9 @@
 
         .obj-card-image{
             margin: 2px;
+            background-repeat: no-repeat;
+            width: 96%;
+            background-size: contain;
         }
 
         .obj-card-text{
@@ -59,32 +62,39 @@
     <h1>Library</h1>
     <a>We are building a library of open source .objs for free use</a>
 
-    <!-- User Input -->
-    <p style="margin-top: 50px;"></p>
-    <div style="width:100%">
-        <p>Your Objects</p>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{new_form.as_p}}
-            <div class="top-bar-left">
-                <input type="file" name="document">
-            </div>
-            <div class="top-bar-right">
-                <p><input type="submit" value="Upload" style="float:right"/></p>
-            </div>
-        </form>
-    </div>
-
     <!-- User Objects -->
-    <p style="margin-top: 70px;"></p>
-    <div id="obj-card-holder"></div>
+    <p style="margin-top: 50px;"></p>
+    {% if user.is_authenticated %}
+        <!-- User Input -->
+        <div style="width:100%">
+            <p class="top-bar-left">Your Objects</p>
+            <form method="post" enctype="multipart/form-data" class="top-bar-right">
+                {% csrf_token %}
+                <input type="file" name="document">
+                <button type="submit">Upload</button>
+                {{new_form.as_p}}
+            </form>
+        </div>
+        <!-- User objects -->
+        <p style="margin-top: 100px;"></p>
+        <div class="obj-card-holder">
+            {% for user_obj, name in user_objs %}
+                <div class="obj-card";>
+                    <img src={{ user_obj }} class="obj-card-image">
+                    <p class="obj-card-text">{{ name }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Log in to view your objects</p>
+    {% endif %}
 
     <!-- library -->
     <p style="margin-top: 50px;"></p>
     <div>
         <p style="margin-top: 12px;">Library objects: {{ no_images }} images</p>
     </div>
-    <div id="obj-card-holder">
+    <div class="obj-card-holder">
         {% for image_path, image_label_path in image_paths %}
             <div class="obj-card";>
                 <img src={{ image_path }} class="obj-card-image">

@@ -50,7 +50,30 @@ def datagen(request):
 
 
 def library(request):
+    if request.method == 'POST':
+        print('post+++++++')
+        if 'document' in request.FILES:
+            uploaded_file = request.FILES['document']
+            path = "profiles/"  + request.user.username + "/objs"
+            print('save path: ' + path)
+            fs = FileSystemStorage(location=path)
+            settings_name = fs.save(uploaded_file.name, uploaded_file)
+            print('redir')
+            return redirect('library')
+    
+    print('library')
     context = dict()
+
+    #
+    user_imgs = []
+    if request.user.is_authenticated:
+        user_imgs_dir = "profiles/"  + request.user.username + "/objs"
+        dir_files = os.listdir(user_imgs_dir)
+        for file in dir_files:
+            path = "/media/" + request.user.username + "/objs/" + file
+            user_imgs.append([path, file])
+
+    #
     image_profiles_path = "C:/Users/RMSmi/Documents/GitHub/image_gen_webapp2/datagen/static/datagen/objs"
     rel_dir = "/static/datagen/objs"
     dir_files = os.listdir(image_profiles_path)
@@ -60,24 +83,13 @@ def library(request):
         image_paths.append([f"{rel_dir}/{file}", file])
         names.append(file)
 
+    # context['user_logged_in'] = user.
+    context['user_objs'] = user_imgs
     context['image_paths'] = image_paths
     context['image_names'] = names
     context['no_images'] = len(names)
     print(str(len(image_paths)) + " images")
     return render(request, 'datagen/library.html', context)
-
-
-def upload_obj(request):
-    if request.method == 'POST':
-        if 'document' in request.FILES:
-            uploaded_file = request.FILES['document']
-            print('hi')
-            print(uploaded_file.name)
-            # fs = FileSystemStorage()
-            # settings_name = fs.save(uploaded_file.name, uploaded_file)
-            # print(settings_name)
-    return redirect('datagen/library.html')
-
 
 
 def download_dataset(request):
