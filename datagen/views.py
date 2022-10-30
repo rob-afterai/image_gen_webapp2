@@ -92,6 +92,11 @@ def library(request):
     return render(request, 'datagen/library.html', context)
 
 
+def add_obj_to_dataset(request):
+    print('~~~~~~~~~~~~~~~~~~~~~~add_obj_to_dataset')
+    return redirect('datagen')
+
+
 def download_dataset(request):
     print('Beginning download')
     file_name = "scene_000000.JPEG"
@@ -100,6 +105,23 @@ def download_dataset(request):
     response = StreamingHttpResponse(streaming_content=r)
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
     return response
+
+
+def contact(request):
+    search_term = ''
+
+    if 'search' in request.GET:
+        search_term = request.GET['search']
+        print('searching for "' + search_term + "\"")
+        user_imgs_dir = "profiles/"  + request.user.username + "/objs"
+        dir_files = os.listdir(user_imgs_dir)
+        # articles = Article.objects.all().filter(feeder__icontains=search_term) 
+        # now
+
+    # articles = Article.objects.all()
+    context = dict()
+    # context = {'articles' : articles, 'search_term': search_term }
+    return render(request, 'datagen/contact.html', context)
 
 
 def view_that_asks_for_money(request):

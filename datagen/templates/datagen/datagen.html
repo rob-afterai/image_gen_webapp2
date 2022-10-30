@@ -76,12 +76,12 @@
         /* card area */
         #image-card-holder{
             position: relative;
-            border: 3px solid black;
-            width: fit-content;
+            border: 0px solid rgb(157, 157, 157);
+            width: 100%;
             block-size: fit-content;
             margin: 5px;
             padding: 5px;
-            background-color: lightgray;
+            background-color: rgb(233, 233, 233);
         }
         
         .image-card{
@@ -138,7 +138,6 @@
                 <div class="top-bar-left">
                     <p style="margin-top: 22px;">selected objects</p>
                 </div>
-                <div class="top-bar-right"></div>
             </div>
             <div id="image-card-holder">
                 {% for image_path, image_label_path in object_paths %}
@@ -147,10 +146,10 @@
                         <p class="image-card-text">{{ image_label_path }}</p>
                     </div>
                 {% endfor %}
-                <div class="image-card";>
+                <!-- <div class="image-card";>
                     <img src="/static/datagen/add.png" class="image-card-image">
                     <p class="image-card-text">Add obj from library</p>
-                </div>
+                </div> -->
             </div>
         </div>
 
