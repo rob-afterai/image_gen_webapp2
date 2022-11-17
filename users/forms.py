@@ -15,7 +15,15 @@ class UserRegisterForm(UserCreationForm):
 class DatasetForm(forms.ModelForm):
     class Meta:
         model = Dataset
-        fields = ('title', 'settings_file')
+        fields = (
+            'no_images',
+            'image_height',
+            'image_width',
+            'image_extension',
+            'color_mode',
+            'segmented_labelling',
+            'json_label',
+            )
 
 
 # class ProfileUpdateForm(forms.ModelForm):

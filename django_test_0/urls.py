@@ -35,14 +35,17 @@ urlpatterns = [
     path('profile/', user_views.profile, name='profile'),
     path('profile/<int:pk>/', user_views.delete_dataset, name='delete_dataset'),
     path('profile/download/<int:pk>/', user_views.download_dataset, name='download_dataset'),
+
     # path('dataset/<pk>/', DatasetDetailView.as_view(), name='dataset-detail'),
     # path('dataset/new/', DatasetCreateView.as_view(), name='dataset-create'),
     
     path('dataset/<int:pk>/', user_views.dataset, name='dataset'),
     path('dataset/create/', user_views.dataset_create, name='dataset-create'),
-    path('dataset/generate-images/<int:pk>', user_views.dataset_generate_images, name='dataset-generate-images'),
+    path('dataset/generate-images/<int:pk>', user_views.generate_images, name='generate-images'),
+    path('dataset/remove_obj/<int:pk>/<int:obj_pk>', user_views.remove_obj, name='remove_obj'),
+    # path('dataset/generate_images', user_views.generate_images, name='generate_images'),
 
-    # path('upload_dataset/', user_views.upload_settings_file, name='upload_dataset'),
+    path('test/', user_views.test, name='test'),
     # path('profile/<pk>/update', DatasetUpdateView.as_view(), name='post-update'),
     # path('profile/new/delete', DatasetDeleteView.as_view(), name='post-delete'),
 ]

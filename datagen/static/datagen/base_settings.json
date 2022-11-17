@@ -1,0 +1,15 @@
+{
+	"seed": -1,
+	"Simulator": "Blender",
+	"no_images": 100,
+	"image_size": [100, 100, 3],
+	"image_extension": "JPEG",
+	"objects_per_image": 5,
+	"selected_objects": [
+		"Circ_HolDu",
+        "Hex_CirCL",
+        "Ocu_OmSi",
+        "Dual_PiSi",
+        "Sha_RouPa"
+	]
+}

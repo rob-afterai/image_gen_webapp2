@@ -82,22 +82,25 @@
 </head>
 
 <body>
+    <!-- top bar username and new dataset button -->
     <div>
-        <div class="bar-left"><h2>{{ user.username }}</h2></div>
-        <div class="bar-right"><form action="#">
-            <!-- <input type="submit" value="New Dataset"/> -->
-            <div class="form-group">
-                <a class="btn btn-primary right" href="{% url 'dataset-create' %}">New Dataset</a>
-            </div>
-        </form></div>
+        <div class="bar-left">
+            <h2>{{ user.username }}</h2>
+        </div>
+        <div class="bar-right">
+            <form action="/dataset/create/" method='post'>
+                {% csrf_token %}
+                <input type="submit" value="New Dataset" class="btn btn-primary right"/>
+            </form>
+        </div>
     </div>
+    <!-- list datasets -->
     <div class="dataset-card">
         {% for dataset in datasets %}
         <div class="form-inline" style="border: 2px solid black; padding-left: 30px;">
             <div class="bar-left">
-                <!-- <p>Dataset 1: {{ num_images }} images</p> -->
-                <b style="font-size: 25px"> {{ dataset.title }} </b>
-                <p>{{ dataset.number_of_images }} images</p>
+                <b style="font-size: 25px"> {{ dataset.name }} </b>
+                <p>{{ dataset.no_images }} images</p>
             </div>
             <div class="bar-right">
                 <form action="{% url 'download_dataset' dataset.pk %}" class="btn btn-sm right">
@@ -107,7 +110,8 @@
                     {% csrf_token %}
                     <input type="submit" value="Delete"/>
                 </form>
-                <form action="{% url 'dataset' dataset.pk %}" class="btn btn-sm right">
+                <form action="{% url 'dataset' dataset.pk %}" class="btn btn-sm right" method="POST">
+                    {% csrf_token %}
                     <input type="submit" value="View"/>
                 </form>
             </div>

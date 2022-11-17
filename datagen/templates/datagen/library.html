@@ -78,12 +78,12 @@
     <a>We are building a library of open source .objs for free use</a>
 
     <!-- search -->
-    <div style="float: right;">
+    <!-- <div style="float: right;">
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search_var" >
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
-    </div>
+    </div> -->
 
     <!-- TODO: ONLY SHOW IMGS THAT MATCH SEARCH NAME -->
 
@@ -95,7 +95,8 @@
             <p class="top-bar-left">Your Objects</p>
             <form method="post" enctype="multipart/form-data" class="top-bar-right">
                 {% csrf_token %}
-                <input type="file" name="document">
+                <input type="file" name="obj_file">
+                <!-- <input type="file" name="mtl_file"> -->
                 <button type="submit">Upload</button>
                 {{new_form.as_p}}
             </form>
@@ -104,14 +105,10 @@
         <!-- <p class="image-card-text">Add obj from library</p> -->
         <p style="margin-top: 100px;"></p>
         <div class="obj-card-holder">
-            {% for user_obj, name in user_objs %}
-                <div class="obj-card";>
-                    <img class="obj-card-image" src={{ user_obj }}>
-                    <a href="{% url 'add_obj_to_dataset' %}">
-                        <img class="obj-card-toolbar" src="/static/datagen/plus_30x30.png">
-                    </a>
-                    <p class="obj-card-text">{{ name }}</p>
-                </div>
+            {% for user_obj in user_objs %}
+            <div class="obj-card";>
+                <p class="obj-card-text">{{ user_obj.name }}</p>
+            </div>
             {% endfor %}
         </div>
     {% else %}
@@ -124,13 +121,9 @@
         <p style="margin-top: 12px;">Library objects: {{ no_images }} images</p>
     </div>
     <div class="obj-card-holder">
-        {% for image_path, image_label_path in image_paths %}
+        {% for lib_obj in lib_objs %}
             <div class="obj-card";>
-                <img class="obj-card-image" src={{ image_path }}>
-                <a href="{% url 'add_obj_to_dataset' %}">
-                    <img class="obj-card-toolbar" src="/static/datagen/plus_30x30.png">
-                </a>
-                <p class="obj-card-text">{{ image_label_path }}</p>
+                <p class="obj-card-text">{{ lib_obj.name }}</p>
             </div>
         {% endfor %}
     </div>

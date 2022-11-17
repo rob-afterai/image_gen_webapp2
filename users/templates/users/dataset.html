@@ -1,6 +1,7 @@
 {% extends "datagen/base.html" %}
 {% load static %}
 {% block content %}
+{% load crispy_forms_tags %}
 
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -111,72 +112,131 @@
 </head>
 
 <body>
-<div class="container" style="padding: 100px 0;">
-    
-    <h1>{{dataset.title}}</h1>
+<div class="container" style="padding-top: 100px;">
+    <h1>{{dataset.name}}</h1>
+    <p style="margin-top: 22px;"></p>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
-    <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#home">Set Up</a>
-    </li>
-    <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#menu1">View Images</a>
-    </li>
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#objects_tab">Objects</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#settings_edit_tab">Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#settings_view_tab">Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#payment_tab">Generate Images</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#images_tab">View Results</a>
+        </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <!-- Set up tab -->
-        <div class="tab-pane container active" id="home">
-            <!-- <div style="height: 40px;"></div> -->
-            <div class="form-inline">
-                <!-- <div class="top-bar-left">
-                    <p style="margin-top: 12px;">showing {{ num_images }} images</p>
+        
+        <!-- objects_tab -->
+        <div class="tab-pane container active" id="objects_tab" method="POST">
+            <!-- search -->
+            <p style="margin-top: 22px;"></p>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="search" name="searched">
+                <button type="submit">Add</button>
+            </form>
+            <p style="margin-top: 22px;"></p>
+            <!-- list objs in cards -->
+            <div id="image-card-holder">
+                {% for obj in lib_objs %}
+                    <div class="image-card";>
+                        <!-- <img src={{ image_path }} class="image-card-image"> -->
+                        <a href="{% url 'remove_obj' dataset.pk obj.pk %}">
+                            <!-- <input type="submit" value="obj"/> -->
+                            <img class="obj-card-toolbar" src="/static/datagen/remove_30x30.png">
+                        </a>
+                        <p class="image-card-text">{{obj.name}}</p>
+                    </div>
+                {% endfor %}
+                <!-- <div class="image-card";>
+                    <img src="/static/datagen/add.png" class="image-card-image">
+                    <p class="image-card-text">Add obj from library</p>
                 </div> -->
-                <div style="padding: 10px;">
-                </div>
             </div>
+        </div>
+
+        <!-- settings_edit_tab -->
+        <div class="tab-pane container fade" id="settings_edit_tab">
+            <div style="padding: 15px;"></div>
+            <div id="settings-body">
+                <form method="post" action="{% url 'dataset' dataset.pk %}">
+                    {% csrf_token %}
+                    {{form.as_ul}}
+                    <button type="submit", method='POST'>Save</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- settings view tab -->
+        <div class="tab-pane container fade" id="settings_view_tab">
+            <div style="padding: 15px;"></div>
             <div id="settings-body">
                 <table id="settings">
                     <tr>
-                        <td>Number of objects</td>
-                        <td>5</td>
-                    </tr>
-                    <tr>
-                        <td>Background image</td>
-                        <td>No</td>
-                    </tr>
-                    <tr>
                         <td>Number of images</td>
-                        <td>100</td>
+                        <td>{{dataset.no_images}}</td>
+                    </tr>
+                    <tr>
+                        <td>Image height</td>
+                        <td>{{dataset.image_height}}</td>
+                    </tr>
+                    <tr>
+                        <td>Image width</td>
+                        <td>{{dataset.image_width}}</td>
+                    </tr>
+                    <tr>
+                        <td>Image extension</td>
+                        <td>{{dataset.image_extension}}</td>
+                    </tr>
+                    <tr>
+                        <td>Color mode</td>
+                        <td>{{dataset.color_mode}}</td>
+                    </tr>
+                    <tr>
+                        <td>Segmented label</td>
+                        <td>{{dataset.segmented_labelling}}</td>
+                    </tr>
+                    <tr>
+                        <td>JSON label</td>
+                        <td>{{dataset.json_label}}</td>
                     </tr>
                 </table>
             </div>
-            <div id="form-footer">
-                <form action="#" class="right-align-button">
-                    <input type="submit" value="View Images"/>
-                    <!-- <a data-toggle="tab" id="generate-button" href="#menu1">View Images</a> -->
-                </form>
-                <form model="POST" action="{% url 'dataset-generate-images' dataset.pk %}" class="right-align-button">
-                    <input type="submit" value="Generate Images"/>
-                </form>
-            </div>
-            <p>Selected Objects:</p>
-            <p>Object Library - pick some objects</p>
         </div>
-        <div class="tab-pane container fade" id="menu1">
-            <!-- view images tab -->
+
+        <!-- payment_tab -->
+        <div class="tab-pane container fade" id="payment_tab">
+            <div style="padding: 15px;"></div>
+            <div class="form-inline">
+                <div class="top-bar-right">
+                    <!-- <input type="submit" value="Pay"/> -->
+                    <form action="{% url 'generate-images' dataset.pk %}" class="right-align-button">
+                        <input type="submit" value="Generate"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- images_tab -->
+        <div class="tab-pane container fade" id="images_tab">
             <div class="form-inline">
                 <div class="top-bar-left">
-                    <p style="margin-top: 12px;">showing {{ dataset.number_of_images }} images</p>
+                    <p style="margin-top: 12px;">showing {{ num_images }} images</p>
                 </div>
                 <div class="top-bar-right">
-                    <!-- <button class="right-align-button btn-outline-info" type="submit">Sign Up</button> -->
-                    <form action="#" class="right-align-button">
+                    <form action="download" class="right-align-button">
                         <input type="submit" value="Download"/>
-                    </form>
-                    <form action="dataset-create" class="right-align-button">
-                        <input type="submit" value="Save"/>
                     </form>
                 </div>
             </div>

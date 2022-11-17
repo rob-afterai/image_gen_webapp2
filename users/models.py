@@ -17,38 +17,44 @@ class Profile(models.Model):
     #     super().save(args, kwargs)
 
 
+class Obj(models.Model):
+    name = models.CharField(max_length=100, default='New Obj')
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    extension = models.CharField(max_length=20, default='obj')
+    model_file_size = models.IntegerField(default=0)
+    model_vertices = models.IntegerField(default=0)
+    model_height = models.IntegerField(default=0)
+    model_width = models.IntegerField(default=0)
+    model_depth = models.IntegerField(default=0)
+    view_profile = models.ImageField(upload_to='objs')
+    blob_str = models.CharField(max_length=100, default='')
+    tags = models.TextField(default='[]')    # list of tags
+    view_ym = models.CharField(max_length=240, default='')
+    view_yp = models.CharField(max_length=240, default='')
+    view_xp = models.CharField(max_length=240, default='')
+    view_xm = models.CharField(max_length=240, default='')
+    view_zp = models.CharField(max_length=240, default='')
+    view_zm = models.CharField(max_length=240, default='')
+
+
+
 class Dataset(models.Model):
-    title = models.CharField(max_length=100)
+    # private info
+    name = models.CharField(max_length=200, default='dataset')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     date_created = models.DateTimeField(default=timezone.now)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    path_to_images = models.CharField(max_length=200, default="default")
-    settings_file = models.CharField(max_length=200, default="default")
-    number_of_images = models.IntegerField(default=0)
-    # object_names = models.
-
-
-# content = models.TextField()
-# image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-# author = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-# class DatasetForm(forms.ModelForm):
-#     class Meta:
-#         model = Dataset
-#         fields = ('title', 'settings_file')
-
-# dataset_detail.html
-# dataset_form.html
-# ???
-
-
-# create dataset
-# save dataset
-
-# /datagen is currently my create dataset page
-
-# i guess we turn datagen / setup and view images tabs in to seperate pages
-# generate data -> dataset_detail
-# setup tab only becomes configurable 
-# generate data page becomes setup tab only & links to static instance of dataset_detail page
+    # path_to_images = models.CharField(max_length=200, default="default")
+    # settings_file = models.CharField(max_length=200, default="default")
+    # number_of_images = models.IntegerField(default=0)
+    # image generation settings
+    objects_per_image = models.IntegerField(default=5)
+    job_generated = models.BooleanField(default=False)
+    objs_list_json_str = models.TextField(default='[]')
+    no_images = models.IntegerField(default=10)
+    image_height = models.IntegerField(default=100)
+    image_width = models.IntegerField(default=100)
+    image_extension = models.CharField(max_length=8, choices=(('JPEG', 'JPEG'),), default='JPEG')
+    color_mode = models.CharField(max_length=8, choices=(('RGB','RGB'),), default='RGB')
+    json_label = models.BooleanField(default=True)
+    segmented_labelling = models.BooleanField(default=False)

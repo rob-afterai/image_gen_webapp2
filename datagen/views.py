@@ -6,16 +6,21 @@ from pathlib import Path
 from django.shortcuts import render, redirect
 import requests
 from django.core.files.storage import FileSystemStorage
-
+from .models import Obj
 from django.http import StreamingHttpResponse
 import shutil
 from wsgiref.util import FileWrapper
 import mimetypes
-from paypal.standard.models import ST_PP_COMPLETED
-from paypal.standard.ipn.signals import valid_ipn_received
-from paypal.standard.forms import PayPalPaymentsForm
-from paypal.standard.models import ST_PP_COMPLETED
-from paypal.standard.ipn.signals import valid_ipn_received
+# from paypal.standard.models import ST_PP_COMPLETED
+# from paypal.standard.ipn.signals import valid_ipn_received
+# from paypal.standard.forms import PayPalPaymentsForm
+# from paypal.standard.models import ST_PP_COMPLETED
+# from paypal.standard.ipn.signals import valid_ipn_received
+from azure.storage.blob import ContainerClient  # BlobClient
+import json
+from django.core.files.storage import default_storage
+from django.apps import apps
+Obj = apps.get_model(app_label='users', model_name='Obj')
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,50 +55,78 @@ def datagen(request):
 
 
 def library(request):
-    if request.method == 'POST':
-        print('post+++++++')
-        if 'document' in request.FILES:
-            uploaded_file = request.FILES['document']
-            path = "profiles/"  + request.user.username + "/objs"
-            print('save path: ' + path)
-            fs = FileSystemStorage(location=path)
-            settings_name = fs.save(uploaded_file.name, uploaded_file)
-            print('redir')
-            return redirect('library')
-    
-    print('library')
     context = dict()
+    con_str='DefaultEndpointsProtocol=https;AccountName=afteraisub1storage;AccountKey=pmabm0K12K0TGF2DiHvLd8Z0hg+/EA3UEs/eAd2KXE1Txj9s/VDxNowVQdixuv1RK83qeY97UlXH+AStJtJ6Iw==;EndpointSuffix=core.windows.net'
 
-    #
-    user_imgs = []
-    if request.user.is_authenticated:
-        user_imgs_dir = "profiles/"  + request.user.username + "/objs"
-        dir_files = os.listdir(user_imgs_dir)
-        for file in dir_files:
-            path = "/media/" + request.user.username + "/objs/" + file
-            user_imgs.append([path, file])
+    if request.method == 'POST':
+        print('post method')
+        if 'obj_file' in request.FILES:
+            # check file is valid - size limit & extension
+            uploaded_file = request.FILES['obj_file']
+            print('uploaded_file: ' + str(uploaded_file))
+            if not uploaded_file._name[-4:] == ".obj":
+                print("file is not a .obj")
+                
+            elif uploaded_file.size > 1_000_000:
+                print('uploaded file size is ' + str(uploaded_file.size) + \
+                '  is greater allowed size 10^6. Try removing verticed from the .obj')
+            
+            elif len(Obj.objects.all().filter(name=uploaded_file._name)) > 0:
+                print('File already exists, please choose another name')
+            
+            else:
+                # upload to azure
+                print('uploading new obj')
+                print(type(uploaded_file))
+                container_name = request.user.username
+                container_client = ContainerClient.from_connection_string(con_str, container_name)
+                dst = "objs/" + uploaded_file._name
+                print("dst: " + dst)
+                blob_client = container_client.get_blob_client(dst)
+                blob_client.upload_blob(uploaded_file)
+                
+                # store in database
+                new_obj = Obj(user=request.user, name=uploaded_file._name)
+                new_obj.save()
+                print('obj saved to database')
+    
+    # # get objs in library (todo - real objs not just imgs)
+    # if request.user.is_authenticated:
+    #     user_imgs_dir = "profiles/"  + request.user.username + "/objs"
+    #     dir_files = os.listdir(user_imgs_dir)
+    #     for file in dir_files:
+    #         path = "/media/" + request.user.username + "/objs/" + file
+    #         user_imgs.append([path, file])
 
-    #
-    image_profiles_path = "C:/Users/RMSmi/Documents/GitHub/image_gen_webapp2/datagen/static/datagen/objs"
-    rel_dir = "/static/datagen/objs"
-    dir_files = os.listdir(image_profiles_path)
-    image_paths = []
-    names = []
-    for file in dir_files:
-        image_paths.append([f"{rel_dir}/{file}", file])
-        names.append(file)
+    # get the names too
+    container_name = "0-library"
+    # container_client = ContainerClient.from_connection_string(con_str, container_name)
+    # only display the first 10?
+
+    # for file in dir_files:
+    #     image_paths.append([f"{rel_dir}/{file}", file])
+    #     names.append(file)
 
     # context['user_logged_in'] = user.
-    context['user_objs'] = user_imgs
-    context['image_paths'] = image_paths
-    context['image_names'] = names
-    context['no_images'] = len(names)
-    print(str(len(image_paths)) + " images")
+    context['user_objs'] = Obj.objects.filter(user_id=request.user.id)    # user=request.user
+    context['lib_objs'] = Obj.objects.filter(user_id=1)
+    # context['image_paths'] = image_paths
+    # context['image_names'] = names
+    # context['no_images'] = len(names)
+    # print(str(len(image_paths)) + " images")
     return render(request, 'datagen/library.html', context)
 
 
-def add_obj_to_dataset(request):
-    print('~~~~~~~~~~~~~~~~~~~~~~add_obj_to_dataset')
+def add_obj_to_dataset(request, pk):
+    print('add_obj_to_dataset')
+    # user.active_dataset.objects.add(selected_obj)
+    # user.active_dataset.objs[name]
+    user = request.user
+    return redirect('datagen')
+
+
+def remove_obj_from_dataset(request):
+    print('remove_obj_from_dataset')
     return redirect('datagen')
 
 

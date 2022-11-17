@@ -1,8 +1,0 @@
-{
-	"seed": -1,
-	"Simulator": "Blender",
-	"no_images": 100,
-	"image_size": [200,200,3],
-	"image_extension": "JPEG",
-	"objects_per_image": 5
-}
